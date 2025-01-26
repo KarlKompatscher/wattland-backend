@@ -1,5 +1,6 @@
 const express = require('express');
 const firebaseAdmin = require('firebase-admin');
+const { createNewGame } = require('./gameLogic');
 require('dotenv').config();
 
 // Initialize Firebase Admin SDK
@@ -22,3 +23,15 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+// Start a new game (API endpoint)
+app.post('/start-game', async (req, res) => {
+    const { gameId, players } = req.body;
+    try {
+      await createNewGame(gameId, players);
+      res.status(200).send(`Game ${gameId} started successfully!`);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error starting the game.');
+    }
+  });
