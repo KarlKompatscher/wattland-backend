@@ -1,8 +1,15 @@
 const firebaseAdmin = require('firebase-admin');
-const db = firebaseAdmin.firestore();
 
 // Function to create a new game
 const createNewGame = async (gameId, players) => {
+  // Ensure Firebase is initialized before accessing Firestore
+  if (!firebaseAdmin.apps.length) {
+    console.error('Firebase is not initialized yet');
+    throw new Error('Firebase is not initialized');
+  }
+
+  const db = firebaseAdmin.firestore(); // Now we initialize firestore after Firebase is initialized
+
   const deck = shuffleDeck(createDeck());
 
   const gameState = {
